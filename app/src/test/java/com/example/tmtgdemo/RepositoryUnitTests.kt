@@ -7,9 +7,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-class MainUnitTests {
+class RepositoryUnitTests {
     @Test
-    fun house_repository_gethouses() = runTest {
+    fun house_repository_get_all_houses() = runTest {
         val testHomes = FakeHouseDetailRepository().getListOfHouses() as ListOfHomesState.Success
 
         Assert.assertEquals(testHomes.homesDB.size, testHomesDB.size)

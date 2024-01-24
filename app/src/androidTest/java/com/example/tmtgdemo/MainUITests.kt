@@ -20,7 +20,7 @@ import org.junit.Test
  */
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
-class MainTests {
+class MainUITests {
 
     @get:Rule(order = 1)
     var hiltTestRule = HiltAndroidRule(this)
