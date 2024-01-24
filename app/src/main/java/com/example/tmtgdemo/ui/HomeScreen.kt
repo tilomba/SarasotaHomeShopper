@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,12 +29,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun HomeScreen(navController: NavController,
-               viewModel: HomeViewmodel = hiltViewModel()
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewmodel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         viewModel.events.onEach { event ->
-            when(event) {
+            when (event) {
                 is HomeEvent.navigateTo -> {
                     navController.navigate(event.destination)
                 }
@@ -42,7 +44,7 @@ fun HomeScreen(navController: NavController,
     }
 
     fun handleAction(action: HomeAction) {
-        when(action) {
+        when (action) {
             is HomeAction.ListOfHomesClicked -> {
                 viewModel.actions.trySend(action)
             }
@@ -66,7 +68,9 @@ fun Home(actionHandler: HomeActionHandler) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(modifier = Modifier.fillMaxWidth(),
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("HomeButtonTestTag"),
                     onClick = { actionHandler(HomeAction.ListOfHomesClicked(0)) }) {
                     Text("View Sarasota Homes")
                 }

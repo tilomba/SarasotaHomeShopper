@@ -85,7 +85,9 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
     testImplementation("app.cash.turbine:turbine:1.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
 }
