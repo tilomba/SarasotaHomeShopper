@@ -1,11 +1,9 @@
 package com.example.tmtgdemo.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.tmtgdemo.data.HomeModel
 import com.example.tmtgdemo.repository.HouseDetailRepository
-import com.example.tmtgdemo.repository.HouseDetailRepositoryImpl
 import com.example.tmtgdemo.util.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +18,6 @@ class HouseDetailViewmodel @Inject constructor(
     private val houseId: Int? = savedStateHandle["houseId"]
 
     init {
-        Log.d("TMTGLog", "houseId = ${houseId}")
         houseId?.let{
             getHouseImages(it)
         }

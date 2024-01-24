@@ -2,14 +2,14 @@ package com.example.tmtgdemo.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -63,12 +63,14 @@ fun HouseDetailScreen(
     }
 
     val state by viewModel.state.collectAsState(HouseDetailState.Loading)
+    val lazyState = rememberLazyListState()
 
     when (val readyState = state) {
         is HouseDetailState.Success -> {
             HouseDetail(
                 actionHandler = ::handleAction,
-                readyState.house.images
+                readyState.house.images,
+                lazyState
             )
         }
 
@@ -83,7 +85,8 @@ fun HouseDetailScreen(
 @Composable
 fun HouseDetail(
     actionHandler: HouseDetailActionHandler,
-    images: List<Int>
+    images: List<Int>,
+    lazyState: LazyListState
 ) {
 
     Scaffold(
@@ -106,11 +109,11 @@ fun HouseDetail(
     ) { paddingValue ->
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
+            state = lazyState,
             contentPadding = paddingValue
         ) {
             itemsIndexed(images) { index, imageId ->
                 HouseDetailCard(
-                    actionHandler,
                     imageId
                 )
             }
@@ -120,7 +123,7 @@ fun HouseDetail(
 }
 
 @Composable
-fun HouseDetailCard(actionHandler: HouseDetailActionHandler, imageId: Int) {
+fun HouseDetailCard(imageId: Int) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -141,7 +144,6 @@ fun HouseDetailCard(actionHandler: HouseDetailActionHandler, imageId: Int) {
                 painter = painterResource(id = imageId),
                 contentDescription = null,
                 modifier = Modifier
-//                    .size(130.dp)
                     .padding(8.dp),
                 contentScale = ContentScale.Fit,
             )

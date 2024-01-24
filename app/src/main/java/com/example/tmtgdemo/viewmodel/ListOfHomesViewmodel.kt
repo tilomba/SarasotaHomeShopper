@@ -1,11 +1,22 @@
 package com.example.tmtgdemo.viewmodel
 
+import androidx.lifecycle.viewModelScope
+import com.example.tmtgdemo.data.HomeModel
+import com.example.tmtgdemo.repository.HouseDetailRepository
 import com.example.tmtgdemo.util.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListOfHomesViewmodel @Inject constructor() : BaseViewModel<ListOfHomesAction, ListOfHomesState, ListOfHomesEvent>(ListOfHomesState.Loading) {
+class ListOfHomesViewmodel @Inject constructor(
+    private val houseDetailRepository: HouseDetailRepository
+) : BaseViewModel<ListOfHomesAction, ListOfHomesState, ListOfHomesEvent>(ListOfHomesState.Loading) {
+
+    init {
+        getListOfHouses()
+    }
+
     override fun handleAction(action: ListOfHomesAction) {
         when(action) {
             is ListOfHomesAction.OnHomeButtonPressed ->
@@ -18,6 +29,24 @@ class ListOfHomesViewmodel @Inject constructor() : BaseViewModel<ListOfHomesActi
             }
         }
     }
+
+    private fun getListOfHouses() {
+        viewModelScope.launch {
+            when(val response = houseDetailRepository.getListOfHouses()) {
+                is ListOfHomesState.Success -> {
+                    if(state.value !is ListOfHomesState.Error) {
+                        _state.value = ListOfHomesState.Success(
+                            homesDB = response.homesDB
+                        )
+                    }
+                }
+                else -> {
+                    _state.value = ListOfHomesState.Error(1, "Error loading housing database")
+                }
+            }
+        }
+    }
+
 }
 
 typealias ListOfHomesActionHandler  = (ListOfHomesAction) -> Unit
@@ -28,7 +57,7 @@ sealed class ListOfHomesAction : ViewAction {
 }
 
 sealed class ListOfHomesState : ViewState {
-    data class Success (val homeId: Int) : ListOfHomesState()
+    data class Success(val homesDB: List<HomeModel>) : ListOfHomesState()
     data class Error (val errorCode: Int, val errorMessage : String) : ListOfHomesState()
     object Loading : ListOfHomesState()
 }

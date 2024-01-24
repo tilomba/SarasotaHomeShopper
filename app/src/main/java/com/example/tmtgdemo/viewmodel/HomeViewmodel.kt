@@ -1,6 +1,5 @@
 package com.example.tmtgdemo.viewmodel
 
-import android.util.Log
 import com.example.tmtgdemo.util.Screens
 import javax.inject.Inject
 
@@ -9,7 +8,6 @@ class HomeViewmodel @Inject constructor() : BaseViewModel<HomeAction, HomeState,
         when(action) {
             is HomeAction.ListOfHomesClicked ->
             {
-                Log.d("TMTGDemo", "viewmodel handleAction()")
                 _eventChannel.trySend(HomeEvent.navigateTo(Screens.LISTOFHOMES))
             }
         }

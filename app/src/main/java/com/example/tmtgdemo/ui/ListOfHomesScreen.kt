@@ -23,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -32,10 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tmtgdemo.R
-import com.example.tmtgdemo.data.homesDB
+import com.example.tmtgdemo.data.HomeModel
 import com.example.tmtgdemo.viewmodel.ListOfHomesAction
 import com.example.tmtgdemo.viewmodel.ListOfHomesActionHandler
 import com.example.tmtgdemo.viewmodel.ListOfHomesEvent
+import com.example.tmtgdemo.viewmodel.ListOfHomesState
 import com.example.tmtgdemo.viewmodel.ListOfHomesViewmodel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -68,18 +71,30 @@ fun ListOfHomesScreen(
         }
     }
 
+    val state by viewModel.state.collectAsState(ListOfHomesState.Loading)
     val lazyState = rememberLazyListState()
 
-    ListOfHomes(
-        actionHandler = ::handleAction,
-        lazyState
-    )
+    when (val readyState = state) {
+        is ListOfHomesState.Success -> {
+            ListOfHomes(
+                actionHandler = ::handleAction,
+                readyState.homesDB,
+                lazyState
+            )
+        }
+
+        else -> {}
+    }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListOfHomes(actionHandler: ListOfHomesActionHandler, lazyState: LazyListState) {
+fun ListOfHomes(
+    actionHandler: ListOfHomesActionHandler,
+    houses: List<HomeModel>,
+    lazyState: LazyListState
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,7 +118,7 @@ fun ListOfHomes(actionHandler: ListOfHomesActionHandler, lazyState: LazyListStat
             modifier = Modifier.fillMaxWidth(),
             contentPadding = paddingValue
         ) {
-            itemsIndexed(homesDB) { index, house ->
+            itemsIndexed(houses) { index, house ->
                 HomeCard(
                     actionHandler = actionHandler,
                     houseId = house.homeId,
