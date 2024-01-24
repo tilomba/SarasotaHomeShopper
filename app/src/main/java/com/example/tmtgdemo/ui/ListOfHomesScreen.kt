@@ -107,7 +107,8 @@ fun ListOfHomes(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(modifier = Modifier.fillMaxWidth()
+                Button(modifier = Modifier
+                    .fillMaxWidth()
                     .testTag("ReturnHomeTestTag"),
                     onClick = { actionHandler(ListOfHomesAction.OnHomeButtonPressed(0)) }) {
                     Text("Home")
@@ -123,7 +124,7 @@ fun ListOfHomes(
             itemsIndexed(houses) { index, house ->
                 HomeCard(
                     actionHandler = actionHandler,
-                    houseId = house.homeId,
+                    houseId = house.houseId,
                     address = house.address,
                     mainThumbnail = house.images[0],
                     description = house.description

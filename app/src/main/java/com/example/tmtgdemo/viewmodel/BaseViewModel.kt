@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
-abstract class BaseViewModel<Action: ViewAction, State: ViewState, Event: ViewEvent> (
+abstract class BaseViewModel<Action : ViewAction, State : ViewState, Event : ViewEvent>(
     private val defaultState: State
 ) : ViewModel() {
-     // events
+    // events
     protected val _eventChannel = Channel<Event>(capacity = UNLIMITED)
-    protected val _events : SendChannel<Event> = _eventChannel
-    val events : Flow<Event> = _eventChannel.receiveAsFlow().onEach {
+    protected val _events: SendChannel<Event> = _eventChannel
+    val events: Flow<Event> = _eventChannel.receiveAsFlow().onEach {
         publishEvent(it)
     }
 
@@ -33,19 +33,20 @@ abstract class BaseViewModel<Action: ViewAction, State: ViewState, Event: ViewEv
 
     // actions
     private val _actions = Channel<Action>(capacity = UNLIMITED)
-    val actions : SendChannel<Action> = _actions
+    val actions: SendChannel<Action> = _actions
 
     protected abstract fun handleAction(action: Action)
     private fun publishAction(action: Action) {
         // Log
     }
+
     fun sendAction(action: Action) {
         _actions.trySend(action)
     }
 
     // state
     protected val _state = MutableStateFlow(defaultState)
-    val state : StateFlow<State> = _state
+    val state: StateFlow<State> = _state
 
     protected fun updateState(state: (State) -> State) {
         _state.value = state(_state.value)
@@ -58,7 +59,6 @@ abstract class BaseViewModel<Action: ViewAction, State: ViewState, Event: ViewEv
         }.launchIn(viewModelScope)
     }
 }
-
 
 
 interface ViewAction

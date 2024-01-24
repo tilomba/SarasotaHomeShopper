@@ -18,7 +18,7 @@ class HouseDetailViewmodel @Inject constructor(
     private val houseId: Int? = savedStateHandle["houseId"]
 
     init {
-        houseId?.let{
+        houseId?.let {
             getHouseImages(it)
         }
     }
@@ -33,14 +33,15 @@ class HouseDetailViewmodel @Inject constructor(
 
     private fun getHouseImages(houseId: Int) {
         viewModelScope.launch {
-            when(val response = houseDetailRepository.getHouse(houseId)) {
+            when (val response = houseDetailRepository.getHouse(houseId)) {
                 is HouseDetailState.Success -> {
-                    if(state.value !is HouseDetailState.Error) {
+                    if (state.value !is HouseDetailState.Error) {
                         _state.value = HouseDetailState.Success(
                             house = response.house
                         )
                     }
                 }
+
                 else -> {
                     _state.value = HouseDetailState.Error(1, "Error loading housing database")
                 }

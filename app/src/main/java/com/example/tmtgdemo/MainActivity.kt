@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,20 +48,11 @@ fun SarasotaHomesFinderCompose() {
     NavHost(navController, startDestination = Screens.HOME) {
         composable(Screens.HOME) { HomeScreen(navController = navController) }
         composable(Screens.LISTOFHOMES) { ListOfHomesScreen(navController = navController) }
-        composable(route = "${Screens.HOUSEDETAIL}/{houseId}",
+        composable(
+            route = "${Screens.HOUSEDETAIL}/{houseId}",
             arguments = listOf(navArgument("houseId") { type = NavType.IntType })
         ) {
             HouseDetailScreen(navController = navController)
         }
-    }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TMTGDemoTheme {
-        SarasotaHomesFinderCompose()
     }
 }

@@ -13,6 +13,6 @@ class HouseDetailRepositoryImpl @Inject constructor() : HouseDetailRepository {
     }
 
     override suspend fun getHouse(houseId: Int): HouseDetailState {
-        return HouseDetailState.Success(house = homesDB.first { homeModel -> homeModel.homeId == houseId })
+        return HouseDetailState.Success(house = homesDB.first { homeModel -> homeModel.houseId == houseId })
     }
 }
